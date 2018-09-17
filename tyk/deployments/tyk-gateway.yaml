@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tyk-gateway
+  labels:
+    app: tyk-gateway
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -28,9 +41,8 @@ spec:
             mountPath: /etc/tyk-gateway
       volumes:
         - name: tyk-gateway-apps
-          gcePersistentDisk:
-            pdName: tyk-gateway
-            fsType: ext4
+          persistentVolumeClaim:
+            claimName: "tyk-gateway"
         - name: tyk-gateway-conf
           configMap:
             name: tyk-gateway-conf

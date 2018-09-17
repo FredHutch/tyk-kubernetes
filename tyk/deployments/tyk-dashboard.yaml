@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tyk-dashboard
+  labels:
+    app: tyk-dashboard
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -26,9 +39,8 @@ spec:
             mountPath: /etc/tyk-dashboard
       volumes:
         - name: tyk-dashboard-volume
-          gcePersistentDisk:
-            pdName: tyk-dashboard
-            fsType: ext4
+          persistentVolumeClaim:
+            claimName: "tyk-dashboard"
         - name: tyk-dashboard-conf
           configMap:
             name: tyk-dashboard-conf
